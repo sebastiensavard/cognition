@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Life Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <h1>Welcome to the Life Calendar</h1>
+    <p>Click below to see the weeks of your life.</p>
+    <a href="{{ url_for('calendar') }}">View Calendar</a>
+  </body>
+</html>
