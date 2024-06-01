@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Progress Tracker</title>
-</head>
-<body>
-    <h1>Your Life Progress - {{ percentage }}%</h1>
-    <form method="post">
+{% extends "base.html" %}
+
+{% block body %}
+    <h1>Welcome to the Life Progress Tracker</h1>
+    <form action="/calendar" method="post">
         <select name="lens_selector" onchange="this.form.submit()">
             {% for lens_id, lens_details in lenses.items() %}
-            <option value="{{ lens_id }}" {% if lens_id == current_lens %}selected{% endif %}>
-                {{ lens_details.name }}
-            </option>
+            <option value="{{ lens_id }}">{{ lens_details.name }}</option>
             {% endfor %}
         </select>
     </form>
-    <div style="display: flex; flex-wrap: wrap; margin-top: 20px;">
-        {% for week in range(total_weeks) %}
-        <div style="width: 10px; height: 10px; background-color: {{ color if week < weeks_spent else '#D3D3D3' }}; margin: 1px;"></div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+{% endblock %}

@@ -1,80 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Your Life in Weeks</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <style>
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(52, 10px);
-      gap: 1px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .grid-item {
-      width: 10px;
-      height: 10px;
-      background-color: lightgray;
-      border: 1px solid #ccc;
-    }
-    .event-item {
-      background-color: yellow;
-    }
-    form {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    input, button {
-      margin: 5px;
-      padding: 5px;
-    }
-    #event-details {
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Your Life in Weeks</h1>
-  <div class="grid-container" id="grid">
-    {% for week in range(weeks) %}
-      <div class="grid-item" id="week-{{ week }}"></div>
-    {% endfor %}
-  </div>
+{% extends "base.html" %}
 
-  <form id="event-form">
-    <input type="number" id="week-input" placeholder="Week Number" min="0" max="{{ weeks-1 }}" required>
-    <input type="text" id="event-description" placeholder="Event Description" required>
-    <button type="submit">Add Event</button>
-  </form>
-
-  <div id="event-details"></div>
-
-  <script>
-    document.getElementById('event-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const week = document.getElementById('week-input').value;
-      const description = document.getElementById('event-description').value;
-
-      if (week >= 0 && week < {{ weeks }}) {
-        const gridItem = document.getElementById(`week-${week}`);
-        gridItem.classList.add('event-item');
-        gridItem.dataset.description = description;
-      }
-    });
-
-    document.querySelectorAll('.grid-item').forEach(item => {
-      item.addEventListener('click', function() {
-        const description = item.dataset.description;
-        if (description) {
-          document.getElementById('event-details').textContent = `Week ${item.id.split('-')[1]}: ${description}`;
-        } else {
-          document.getElementById('event-details').textContent = 'No event for this week.';
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+{% block body %}
+    <h1>Your Life Progress - {{ g.weeks_spent / g.total_weeks * 100 | round(1) }}%</h1>
+    <form action="/calendar" method="post">
+        <select name="lens_selector" onchange="this.form.submit()">
+            {% for lens_id, lens_details in lenses.items() %}
+            <option value="{{ lens_id }}" {% if lens_id == current_lens %}selected{% endif %}>
+                {{ lens_details.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+    <div style="display: flex; flex-wrap: wrap; margin-top: 20px;">
+        {% for week in range(g.total_weeks) %}
+        <div style="width: 10px; height: 10px; background-color: {{ lenses[current_lens]['color'] if week < g.weeks_spent else '#D3D3D3' }}; margin: 1px;"></div>
+        {% endfor %}
+    </div>
+{% endblock %}

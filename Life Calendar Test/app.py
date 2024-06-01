@@ -1,37 +1,29 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
+from utils import prepare_data
 
 app = Flask(__name__)
 
-# Dummy data representing weeks lived and total weeks
-total_weeks = 52 * 90  # 90 years, as from your 'calendar' route
-weeks_spent = 1129  # Example data
-
-# Define the lenses
+# Define the lenses with specific event periods
 lenses = {
     "default": {"name": "Default View", "color": "#90EE90"},
-    "highlights": {"name": "Life Highlights", "color": "#FFD700"},
-    "challenges": {"name": "Challenges", "color": "#FF6347"}
+    "university": {
+        "name": "Went to university 2002-2006",
+        "color": "#FFD700",
+        "start_date": "2002-01-01",
+        "end_date": "2006-12-31"
+    }
 }
 
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
+@prepare_data
 def index():
-    return render_template('index.html')
-
+    return render_template('index.html', lenses=lenses)
 
 @app.route('/calendar', methods=['GET', 'POST'])
+@prepare_data
 def calendar():
-    current_lens = 'default'
-    if request.method == 'POST':
-        current_lens = request.form.get('lens_selector')
-
-    # Get the color based on the selected lens
-    color = lenses.get(current_lens, lenses['default'])['color']
-
-    return render_template('calendar.html', total_weeks=total_weeks, weeks_spent=weeks_spent,
-                           percentage=round((weeks_spent / total_weeks) * 100, 1),
-                           lenses=lenses, current_lens=current_lens, color=color)
-
+    current_lens = request.form.get('lens_selector', 'default')
+    return render_template('calendar.html', current_lens=current_lens, lenses=lenses)
 
 if __name__ == "__main__":
     app.run(debug=True)
