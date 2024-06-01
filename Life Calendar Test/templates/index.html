@@ -1,13 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Life Calendar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  </head>
-  <body>
-    <h1>Welcome to the Life Calendar</h1>
-    <p>Click below to see the weeks of your life.</p>
-    <a href="{{ url_for('calendar') }}">View Calendar</a>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Progress Tracker</title>
+</head>
+<body>
+    <h1>Your Life Progress - {{ percentage }}%</h1>
+    <form method="post">
+        <select name="lens_selector" onchange="this.form.submit()">
+            {% for lens_id, lens_details in lenses.items() %}
+            <option value="{{ lens_id }}" {% if lens_id == current_lens %}selected{% endif %}>
+                {{ lens_details.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+    <div style="display: flex; flex-wrap: wrap; margin-top: 20px;">
+        {% for week in range(total_weeks) %}
+        <div style="width: 10px; height: 10px; background-color: {{ color if week < weeks_spent else '#D3D3D3' }}; margin: 1px;"></div>
+        {% endfor %}
+    </div>
+</body>
 </html>

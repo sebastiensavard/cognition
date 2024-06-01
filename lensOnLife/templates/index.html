@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-
+    <div class="grid-container">
+        {% for era in eras %}
+            <div class="grid-item">
+                <div class="era-name">{{ era.name }}</div>
+                <div class="era-years">{{ era.start_year }} - {{ era.end_year }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>
